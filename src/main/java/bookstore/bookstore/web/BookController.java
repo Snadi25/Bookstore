@@ -1,9 +1,10 @@
 package bookstore.bookstore.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import bookstore.bookstore.domain.Book;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class BookController {
 
-    private BookRepository bookRepository;
+    private static final Logger log = LoggerFactory.getLogger(BookController.class);
+
+    private final BookRepository bookRepository;
 
     public BookController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -21,38 +24,41 @@ public class BookController {
 
     @GetMapping("/books")
     public String getAllBooks(Model model) {
+        log.info("getAllBooks...");
         model.addAttribute("kirjat", bookRepository.findAll());
         return "booklist";
     }
 
-    @GetMapping("/add")
+    @GetMapping("/addBook")
     public String addBookForm(Model model) {
         model.addAttribute("kirja", new Book());
-        return "addbook";
+        return "addBook";
     }
 
-    @PostMapping("/save")
-    public String saveBook(@ModelAttribute("kirja") Book book) {
+    @PostMapping("/saveBook")
+    public String saveBook(Book book) {
+        log.info("CONTROLLER: Save book: " + book);
         bookRepository.save(book);
         return "redirect:/books";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteBook(@PathVariable("id") Long bookId) {
-        bookRepository.deleteById(bookId);
+    @GetMapping("/deleteBook/{id}")
+    public String deleteBook(@PathVariable Long id) {
+        log.info("Delete book which id = " + id);
+        bookRepository.deleteById(id);
         return "redirect:/books";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editBookForm(@PathVariable("id") Long bookId, Model model) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("Wrong ID: " + bookId));
-        model.addAttribute("kirja", book);
-        return "editbook";
+    @GetMapping("/editBook/{id}")
+    public String editBookForm(@PathVariable Long id, Model model) {
+        log.info("Edit book which id = " + id);
+        model.addAttribute("editBook", bookRepository.findById(id));
+        return "editBook";
     }
 
-    @PostMapping("/update")
-    public String updateBook(@ModelAttribute("kirja") Book book) {
+    @PostMapping("/saveEditedBook")
+    public String saveEditedBook(Book book) {
+        log.info("CONTROLLER: Save edited the book " + book);
         bookRepository.save(book);
         return "redirect:/books";
     }
