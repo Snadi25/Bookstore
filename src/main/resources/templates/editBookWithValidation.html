@@ -14,21 +14,25 @@
         <div>
             <label>Title</label>
             <input type="text" th:field="*{title}" />
+            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Error</div>
         </div>
 
         <div>
             <label>Author</label>
             <input type="text" th:field="*{author}" />
+            <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Error</div>
         </div>
 
         <div>
             <label>ISBN</label>
             <input type="text" th:field="*{isbn}" />
+            <div th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}">Error</div>
         </div>
 
         <div>
             <label>Year</label>
             <input type="text" th:field="*{publicationYear}" />
+            <div th:if="${#fields.hasErrors('publicationYear')}" th:errors="*{publicationYear}">Error</div>
         </div>
 
         <label>Category</label>

@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 
 import bookstore.bookstore.domain.Book;
 import bookstore.bookstore.domain.BookRepository;
+import bookstore.bookstore.domain.Category;
+import bookstore.bookstore.domain.CategoryRepository;
 
 @SpringBootApplication
 public class BookstoreApplication {
@@ -21,11 +23,16 @@ public class BookstoreApplication {
 	}
 
 	@Bean
-	public CommandLineRunner demo(BookRepository bookRepository) {
+	public CommandLineRunner demo(BookRepository bookRepository, CategoryRepository categoryRepository) {
 		return (args) -> {
+			Category category1 = new Category("Fantasy");
+			Category category2 = new Category("Sci-Fi");
+
 			Book book1 = new Book("A Farewell to Arms", "Ernest Hemingway", "1232323-21", 1929);
 			Book book2 = new Book("Animal Farm", "George Orwell", "2212343-5", 1945);
 
+			categoryRepository.save(category1);
+			categoryRepository.save(category2);
 			bookRepository.save(book1);
 			bookRepository.save(book2);
 
